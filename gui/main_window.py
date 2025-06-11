@@ -11,9 +11,12 @@ from core.math_functions import MathFunctionCalculator
 from .control_panel import ControlPanel
 from .plot_area import PlotArea
 from .font_settings import FontSettingsWindow
+<<<<<<< HEAD
 # 暂时注释掉现代化组件，避免启动错误
 # from .theme_manager import theme_manager
 # from .modern_widgets import ModernButton, ModernCard
+=======
+>>>>>>> 9f560dc (init repo)
 
 
 class MathVisualizerApp:
@@ -50,6 +53,7 @@ class MathVisualizerApp:
         """设置主窗口属性"""
         self.root.title(APP_TITLE)
         self.root.geometry(APP_GEOMETRY)
+<<<<<<< HEAD
         self.root.configure(bg='#f8fafc')  # 使用浅色背景
 
         # 设置窗口属性
@@ -79,6 +83,18 @@ class MathVisualizerApp:
                            foreground="white",
                            font=("Arial", 10, "bold"))
         self.style.map("Accent.TButton", background=[("active", "#1d4ed8")])
+=======
+        self.root.configure(bg=APP_BACKGROUND)
+    
+    def setup_styles(self):
+        """设置ttk主题样式"""
+        self.style = ttk.Style()
+        self.style.theme_use(TTK_THEME)
+        
+        # 配置强调按钮样式
+        self.style.configure("Accent.TButton", **ACCENT_BUTTON_STYLE)
+        self.style.map("Accent.TButton", background=[("active", "#3a70b0")])
+>>>>>>> 9f560dc (init repo)
     
     def create_components(self):
         """创建界面组件"""
@@ -174,6 +190,7 @@ class MathVisualizerApp:
     
     def on_show_font_settings(self):
         """显示字体设置窗口"""
+<<<<<<< HEAD
         FontSettingsWindow(
             self.root,
             self.font_manager,
@@ -199,6 +216,13 @@ class MathVisualizerApp:
                 ranges,
                 options
             )
+=======
+        font_window = FontSettingsWindow(
+            self.root, 
+            self.font_manager,
+            self.on_font_changed
+        )
+>>>>>>> 9f560dc (init repo)
     
     def on_font_changed(self):
         """字体更改后的回调"""
@@ -216,11 +240,24 @@ class MathVisualizerApp:
 def main():
     """主函数"""
     root = tk.Tk()
+<<<<<<< HEAD
 
     # 创建应用程序实例
     app = MathVisualizerApp(root)
 
     # 启动主循环
+=======
+    app = MathVisualizerApp(root)
+    
+    # 设置应用程序样式
+    root.tk_setPalette(
+        background='#f0f0f0', 
+        foreground='#333333', 
+        activeBackground='#4a90d9', 
+        activeForeground='white'
+    )
+    
+>>>>>>> 9f560dc (init repo)
     root.mainloop()
 
 

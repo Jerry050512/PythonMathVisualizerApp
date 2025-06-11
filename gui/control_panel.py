@@ -54,9 +54,15 @@ class ControlPanel:
     def create_control_panel(self):
         """创建控制面板"""
         # 创建控制面板主框架
+<<<<<<< HEAD
         self.control_frame = ttk.LabelFrame(self.parent, text="🎛️ 函数控制面板", padding=(15, 10))
         self.control_frame.pack(fill=tk.X, pady=(0, 15))
 
+=======
+        self.control_frame = ttk.LabelFrame(self.parent, text="函数控制面板", padding=(15, 10))
+        self.control_frame.pack(fill=tk.X, pady=(0, 15))
+        
+>>>>>>> 9f560dc (init repo)
         # 创建各个区域
         self.create_function_type_area()
         self.create_parameter_area()
@@ -125,6 +131,7 @@ class ControlPanel:
         """创建操作按钮区域"""
         button_frame = ttk.Frame(self.control_frame)
         button_frame.grid(row=4, column=0, columnspan=4, pady=10)
+<<<<<<< HEAD
 
         # 使用美化的按钮文本（带图标）
         ttk.Button(button_frame, text="📊 绘制函数", command=self.plot_callback).grid(row=0, column=0, padx=5)
@@ -133,6 +140,16 @@ class ControlPanel:
         ttk.Button(button_frame, text="💾 保存图像", command=self.save_callback).grid(row=0, column=3, padx=5)
         ttk.Button(button_frame, text="🔤 字体设置", command=self.font_settings_callback).grid(row=0, column=4, padx=5)
 
+=======
+        
+        ttk.Button(button_frame, text="绘制函数", command=self.plot_callback, 
+                  style="Accent.TButton").grid(row=0, column=0, padx=5)
+        ttk.Button(button_frame, text="添加函数", command=self.add_callback).grid(row=0, column=1, padx=5)
+        ttk.Button(button_frame, text="清除图形", command=self.clear_callback).grid(row=0, column=2, padx=5)
+        ttk.Button(button_frame, text="保存图像", command=self.save_callback).grid(row=0, column=3, padx=5)
+        ttk.Button(button_frame, text="字体设置", command=self.font_settings_callback).grid(row=0, column=4, padx=5)
+        
+>>>>>>> 9f560dc (init repo)
         # 分隔线
         ttk.Separator(self.control_frame, orient=tk.HORIZONTAL).grid(
             row=5, column=0, columnspan=4, pady=15, sticky=tk.EW)

@@ -2,6 +2,8 @@
 
 [中文版 README](README_zh.md) 🇨🇳
 
+Check out the AI wiki page [here](https://deepwiki.com/Jerry050512/PythonMathVisualizerApp). 
+
 Math Visualizer is a dynamic and user-friendly Python application 🐍 that allows you to visualize various mathematical functions. You can plot functions, customize their appearance, analyze their key properties, and even overlay multiple functions for comparison! 🥳
 
 ## ✨ Project Highlights ✨

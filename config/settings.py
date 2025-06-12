@@ -87,10 +87,109 @@ MATPLOTLIB_CONFIG = {
 
 # GUI样式设置
 TTK_THEME = "clam"
-ACCENT_BUTTON_STYLE = {
-    'background': "#4a90d9",
-    'foreground': "white",
-    'font': ("Arial", 10, "bold")
+
+# 现代化主题配色方案
+THEMES = {
+    'modern_blue': {
+        'name': '现代蓝',
+        'primary': '#2563eb',           # 主色调 - 现代蓝
+        'primary_dark': '#1d4ed8',      # 深蓝
+        'primary_light': '#3b82f6',     # 浅蓝
+        'secondary': '#64748b',         # 次要色 - 石板灰
+        'accent': '#8b5cf6',            # 强调色 - 紫色
+        'success': '#10b981',           # 成功色 - 绿色
+        'warning': '#f59e0b',           # 警告色 - 橙色
+        'danger': '#ef4444',            # 危险色 - 红色
+        'background': '#f8fafc',        # 背景色
+        'surface': '#ffffff',           # 表面色
+        'surface_variant': '#f1f5f9',   # 表面变体
+        'on_surface': '#1e293b',        # 表面文字
+        'on_primary': '#ffffff',        # 主色文字
+        'border': '#e2e8f0',            # 边框色
+        'shadow': 'rgba(0, 0, 0, 0.1)', # 阴影色
+    },
+    'elegant_dark': {
+        'name': '优雅暗色',
+        'primary': '#6366f1',           # 主色调 - 靛蓝
+        'primary_dark': '#4f46e5',      # 深靛蓝
+        'primary_light': '#818cf8',     # 浅靛蓝
+        'secondary': '#9ca3af',         # 次要色 - 灰色
+        'accent': '#ec4899',            # 强调色 - 粉色
+        'success': '#34d399',           # 成功色 - 绿色
+        'warning': '#fbbf24',           # 警告色 - 黄色
+        'danger': '#f87171',            # 危险色 - 红色
+        'background': '#111827',        # 背景色 - 深灰
+        'surface': '#1f2937',           # 表面色 - 灰色
+        'surface_variant': '#374151',   # 表面变体
+        'on_surface': '#f9fafb',        # 表面文字 - 白色
+        'on_primary': '#ffffff',        # 主色文字
+        'border': '#4b5563',            # 边框色
+        'shadow': 'rgba(0, 0, 0, 0.3)', # 阴影色
+    },
+    'nature_green': {
+        'name': '自然绿',
+        'primary': '#059669',           # 主色调 - 翠绿
+        'primary_dark': '#047857',      # 深绿
+        'primary_light': '#10b981',     # 浅绿
+        'secondary': '#6b7280',         # 次要色 - 灰色
+        'accent': '#d97706',            # 强调色 - 橙色
+        'success': '#22c55e',           # 成功色 - 绿色
+        'warning': '#eab308',           # 警告色 - 黄色
+        'danger': '#dc2626',            # 危险色 - 红色
+        'background': '#f0fdf4',        # 背景色 - 浅绿
+        'surface': '#ffffff',           # 表面色
+        'surface_variant': '#ecfdf5',   # 表面变体
+        'on_surface': '#14532d',        # 表面文字 - 深绿
+        'on_primary': '#ffffff',        # 主色文字
+        'border': '#bbf7d0',            # 边框色
+        'shadow': 'rgba(0, 0, 0, 0.08)', # 阴影色
+    }
+}
+
+# 默认主题
+DEFAULT_THEME = 'modern_blue'
+
+# 按钮样式配置
+BUTTON_STYLES = {
+    'primary': {
+        'relief': 'flat',
+        'borderwidth': 0,
+        'font': ('', 10, 'bold'),
+        'cursor': 'hand2',
+        'padx': 20,
+        'pady': 8
+    },
+    'secondary': {
+        'relief': 'flat',
+        'borderwidth': 1,
+        'font': ('', 10),
+        'cursor': 'hand2',
+        'padx': 16,
+        'pady': 6
+    },
+    'icon': {
+        'relief': 'flat',
+        'borderwidth': 0,
+        'font': ('', 12),
+        'cursor': 'hand2',
+        'padx': 8,
+        'pady': 8
+    }
+}
+
+# 卡片样式
+CARD_STYLE = {
+    'relief': 'flat',
+    'borderwidth': 1,
+    'padx': 20,
+    'pady': 15
+}
+
+# 动画配置
+ANIMATION_CONFIG = {
+    'duration': 200,  # 毫秒
+    'steps': 10,
+    'easing': 'ease_out'
 }
 
 # 文件保存设置

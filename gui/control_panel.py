@@ -1,306 +1,301 @@
 # -*- coding: utf-8 -*-
 """
-控制面板模块
+控制面板模块 - 负责创建和管理控制面板界面
 """
 
 import tkinter as tk
-from tkinter import ttk
-from typing import Tuple, Dict, Any, Callable
-from config.settings import FUNCTION_TYPES, DEFAULT_X_RANGE, DEFAULT_Y_RANGE
+from tkinter import ttk, messagebox
+from gui.font_settings import FontSettingsWindow
 from utils.math_utils import MathUtils
 
 
 class ControlPanel:
     """控制面板类"""
     
-    def __init__(self, parent, math_calculator, font_manager, 
-                 plot_callback: Callable, add_callback: Callable, 
-                 clear_callback: Callable, save_callback: Callable,
-                 font_settings_callback: Callable):
-        """
-        初始化控制面板
-        
-        Args:
-            parent: 父容器
-            math_calculator: 数学计算器实例
-            font_manager: 字体管理器实例
-            plot_callback: 绘制函数回调
-            add_callback: 添加函数回调
-            clear_callback: 清除图形回调
-            save_callback: 保存图形回调
-            font_settings_callback: 字体设置回调
-        """
+    def __init__(self, parent, theme, font_manager, math_calculator, plot_area, font_changed_callback):
         self.parent = parent
-        self.math_calculator = math_calculator
+        self.theme = theme
         self.font_manager = font_manager
-        self.plot_callback = plot_callback
-        self.add_callback = add_callback
-        self.clear_callback = clear_callback
-        self.save_callback = save_callback
-        self.font_settings_callback = font_settings_callback
-        
-        self.plot_area = None  # 将在后面设置
-        
-        # 创建控制面板
-        self.create_control_panel()
-    
-    def set_plot_area(self, plot_area):
-        """设置绘图区域引用"""
+        self.math_calculator = math_calculator
         self.plot_area = plot_area
-    
-    def create_control_panel(self):
-        """创建控制面板"""
-        # 创建控制面板主框架
-        self.control_frame = ttk.LabelFrame(self.parent, text="函数控制面板", padding=(15, 10))
-        self.control_frame.pack(fill=tk.X, pady=(0, 15))
+        self.font_changed_callback = font_changed_callback
         
-        # 创建各个区域
-        self.create_function_type_area()
-        self.create_parameter_area()
-        self.create_range_area()
-        self.create_options_area()
-        self.create_button_area()
-        self.create_info_area()
-    
-    def create_function_type_area(self):
-        """创建函数类型选择区域"""
-        ttk.Label(self.control_frame, text="选择函数类型:", font=('', 10)).grid(
-            row=0, column=0, padx=5, pady=5, sticky=tk.W)
+        self.create_control_content()
         
-        self.function_type = tk.StringVar()
-        self.function_menu = ttk.Combobox(
-            self.control_frame, 
-            textvariable=self.function_type, 
-            values=FUNCTION_TYPES, 
-            state="readonly", 
-            width=15, 
-            font=('', 9)
+    def create_control_content(self):
+        """创建控制面板内容"""
+        # 标题
+        title = tk.Label(
+            self.parent,
+            text="🎛️ 控制面板",
+            font=('Segoe UI', 12, 'bold'),
+            fg=self.theme['primary'],
+            bg=self.theme['surface']
         )
-        self.function_menu.grid(row=0, column=1, padx=5, pady=5, sticky=tk.W)
-        self.function_menu.bind("<<ComboboxSelected>>", self.update_function_options)
-    
-    def create_parameter_area(self):
-        """创建参数输入区域"""
-        self.param_frame = ttk.Frame(self.control_frame)
-        self.param_frame.grid(row=1, column=0, columnspan=4, pady=10, sticky=tk.W)
-    
-    def create_range_area(self):
-        """创建绘图范围设置区域"""
-        range_frame = ttk.Frame(self.control_frame)
-        range_frame.grid(row=2, column=0, columnspan=4, pady=5, sticky=tk.W)
+        title.pack(pady=10)
         
-        # X轴范围设置
-        ttk.Label(range_frame, text="X范围:", font=('', 9)).grid(row=0, column=0, padx=5, sticky=tk.W)
-        self.x_min = tk.DoubleVar(value=DEFAULT_X_RANGE[0])
-        self.x_max = tk.DoubleVar(value=DEFAULT_X_RANGE[1])
-        ttk.Entry(range_frame, textvariable=self.x_min, width=5, font=('', 9)).grid(row=0, column=1, padx=5)
-        ttk.Entry(range_frame, textvariable=self.x_max, width=5, font=('', 9)).grid(row=0, column=2, padx=5)
+        # 函数类型选择
+        self.create_function_selector()
         
-        # Y轴范围设置
-        ttk.Label(range_frame, text="Y范围:", font=('', 9)).grid(row=0, column=3, padx=(15, 5), sticky=tk.W)
-        self.y_min = tk.DoubleVar(value=DEFAULT_Y_RANGE[0])
-        self.y_max = tk.DoubleVar(value=DEFAULT_Y_RANGE[1])
-        ttk.Entry(range_frame, textvariable=self.y_min, width=5, font=('', 9)).grid(row=0, column=4, padx=5)
-        ttk.Entry(range_frame, textvariable=self.y_max, width=5, font=('', 9)).grid(row=0, column=5, padx=5)
-    
-    def create_options_area(self):
-        """创建显示选项区域"""
-        options_frame = ttk.Frame(self.control_frame)
-        options_frame.grid(row=3, column=0, columnspan=4, pady=10, sticky=tk.W)
+        # 参数输入区域
+        self.param_frame = tk.Frame(self.parent, bg=self.theme['surface'])
+        self.param_frame.pack(fill=tk.X, padx=10, pady=10)
         
-        self.show_extrema = tk.BooleanVar(value=True)
-        self.show_roots = tk.BooleanVar(value=True)
-        self.show_intersection = tk.BooleanVar(value=True)
-        self.show_grid_points = tk.BooleanVar(value=False)
+        # 操作按钮
+        self.create_buttons()
         
-        ttk.Checkbutton(options_frame, text="显示极值点", variable=self.show_extrema).grid(row=0, column=0, padx=5)
-        ttk.Checkbutton(options_frame, text="显示零点", variable=self.show_roots).grid(row=0, column=1, padx=5)
-        ttk.Checkbutton(options_frame, text="显示交点", variable=self.show_intersection).grid(row=0, column=2, padx=5)
-        ttk.Checkbutton(options_frame, text="显示网格点", variable=self.show_grid_points).grid(row=0, column=3, padx=5)
-    
-    def create_button_area(self):
-        """创建操作按钮区域"""
-        button_frame = ttk.Frame(self.control_frame)
-        button_frame.grid(row=4, column=0, columnspan=4, pady=10)
-        
-        ttk.Button(button_frame, text="绘制函数", command=self.plot_callback, 
-                  style="Accent.TButton").grid(row=0, column=0, padx=5)
-        ttk.Button(button_frame, text="添加函数", command=self.add_callback).grid(row=0, column=1, padx=5)
-        ttk.Button(button_frame, text="清除图形", command=self.clear_callback).grid(row=0, column=2, padx=5)
-        ttk.Button(button_frame, text="保存图像", command=self.save_callback).grid(row=0, column=3, padx=5)
-        ttk.Button(button_frame, text="字体设置", command=self.font_settings_callback).grid(row=0, column=4, padx=5)
-        
-        # 分隔线
-        ttk.Separator(self.control_frame, orient=tk.HORIZONTAL).grid(
-            row=5, column=0, columnspan=4, pady=15, sticky=tk.EW)
-    
-    def create_info_area(self):
-        """创建函数信息显示区域"""
-        info_frame = ttk.Frame(self.control_frame)
-        info_frame.grid(row=6, column=0, columnspan=4, pady=5, sticky=tk.W)
-        
-        ttk.Label(info_frame, text="函数表达式:", font=('', 10)).grid(row=0, column=0, padx=5, sticky=tk.W)
-        self.function_label = ttk.Label(info_frame, text="", font=("Arial", 10, "bold"), foreground="#3366cc")
-        self.function_label.grid(row=0, column=1, padx=5, sticky=tk.W)
-        
-        ttk.Label(info_frame, text="关键点:", font=('', 10)).grid(row=1, column=0, padx=5, pady=5, sticky=tk.W)
-        self.key_points = ttk.Label(info_frame, text="", font=('', 9), foreground="#333333")
-        self.key_points.grid(row=1, column=1, padx=5, pady=5, sticky=tk.W)
+        # 字体信息显示
+        self.create_font_info()
 
-    def update_function_options(self, event=None):
-        """根据选择的函数类型更新参数输入界面"""
-        # 清除现有的参数输入组件
+        # 初始化参数
+        self.update_parameters()
+    
+    def create_function_selector(self):
+        """创建函数类型选择器"""
+        type_frame = tk.Frame(self.parent, bg=self.theme['surface'])
+        type_frame.pack(fill=tk.X, padx=10, pady=5)
+        
+        tk.Label(
+            type_frame,
+            text="函数类型:",
+            font=('Segoe UI', 10),
+            fg=self.theme['on_surface'],
+            bg=self.theme['surface']
+        ).pack(anchor=tk.W)
+        
+        self.function_type = tk.StringVar(value="二次函数")
+        function_menu = ttk.Combobox(
+            type_frame,
+            textvariable=self.function_type,
+            values=["二次函数", "正弦函数", "余弦函数", "正切函数", "指数函数", "对数函数"],
+            state="readonly",
+            width=25
+        )
+        function_menu.pack(fill=tk.X, pady=5)
+        function_menu.bind("<<ComboboxSelected>>", self.update_parameters)
+    
+    def create_buttons(self):
+        """创建操作按钮"""
+        button_frame = tk.Frame(self.parent, bg=self.theme['surface'])
+        button_frame.pack(fill=tk.X, padx=10, pady=10)
+        
+        buttons = [
+            ("📊 绘制函数", self.plot_function, self.theme['primary']),
+            ("➕ 添加函数", self.add_function, self.theme['secondary']),
+            ("🗑️ 清除图形", self.clear_plot, self.theme['danger']),
+            ("💾 保存图像", self.save_plot, self.theme['success']),
+            ("🔤 字体设置", self.show_font_settings, self.theme['accent'])
+        ]
+
+        for i, (text, command, color) in enumerate(buttons):
+            btn = tk.Button(
+                button_frame,
+                text=text,
+                command=command,
+                bg=color,
+                fg='white',
+                font=('Segoe UI', 9, 'bold'),
+                relief='flat',
+                padx=5,
+                pady=3,
+                cursor='hand2'
+            )
+            btn.pack(fill=tk.X, pady=2)
+    
+    def create_font_info(self):
+        """创建字体信息显示区域"""
+        font_frame = tk.Frame(self.parent, bg=self.theme['surface'])
+        font_frame.pack(fill=tk.X, padx=10, pady=5)
+
+        # 字体信息标题
+        tk.Label(
+            font_frame,
+            text="📝 当前字体:",
+            font=('Segoe UI', 9, 'bold'),
+            fg=self.theme['on_surface'],
+            bg=self.theme['surface']
+        ).pack(anchor=tk.W)
+
+        # 当前字体显示
+        current_font = self.font_manager.get_current_font()
+        self.font_info_label = tk.Label(
+            font_frame,
+            text=current_font,
+            font=('Segoe UI', 8),
+            fg=self.theme['secondary'],
+            bg=self.theme['surface']
+        )
+        self.font_info_label.pack(anchor=tk.W, padx=(10, 0))
+
+        # 字体预览
+        self.font_preview_label = tk.Label(
+            font_frame,
+            text="中文测试: 数学函数",
+            font=(current_font, 9),
+            fg=self.theme['primary'],
+            bg=self.theme['surface']
+        )
+        self.font_preview_label.pack(anchor=tk.W, padx=(10, 0), pady=(2, 0))
+
+    def update_font_info(self):
+        """更新字体信息显示"""
+        try:
+            current_font = self.font_manager.get_current_font()
+            self.font_info_label.config(text=current_font)
+            self.font_preview_label.config(font=(current_font, 9))
+        except Exception as e:
+            print(f"更新字体信息失败: {e}")
+
+    def update_parameters(self, event=None):
+        """更新参数输入"""
+        # 清除现有参数
         for widget in self.param_frame.winfo_children():
             widget.destroy()
-
+        
         func_type = self.function_type.get()
-
-        if func_type == "二次函数":
-            ttk.Label(self.param_frame, text="y = a·x² + b·x + c", font=('', 10)).grid(
-                row=0, column=0, columnspan=3, pady=5)
-
-            ttk.Label(self.param_frame, text="a:", font=('', 9)).grid(row=1, column=0, padx=5, pady=5)
-            self.a = tk.DoubleVar(value=1.0)
-            ttk.Entry(self.param_frame, textvariable=self.a, width=5, font=('', 9)).grid(row=1, column=1, padx=5)
-
-            ttk.Label(self.param_frame, text="b:", font=('', 9)).grid(row=1, column=2, padx=5, pady=5)
-            self.b = tk.DoubleVar(value=0.0)
-            ttk.Entry(self.param_frame, textvariable=self.b, width=5, font=('', 9)).grid(row=1, column=3, padx=5)
-
-            ttk.Label(self.param_frame, text="c:", font=('', 9)).grid(row=1, column=4, padx=5, pady=5)
-            self.c = tk.DoubleVar(value=0.0)
-            ttk.Entry(self.param_frame, textvariable=self.c, width=5, font=('', 9)).grid(row=1, column=5, padx=5)
-
-        elif func_type in ["正弦函数", "余弦函数", "正切函数"]:
-            func_symbol = "sin" if func_type == "正弦函数" else "cos" if func_type == "余弦函数" else "tan"
-            ttk.Label(self.param_frame, text=f"y = a·{func_symbol}(b·x + c)", font=('', 10)).grid(
-                row=0, column=0, columnspan=3, pady=5)
-
-            ttk.Label(self.param_frame, text="a:", font=('', 9)).grid(row=1, column=0, padx=5, pady=5)
-            self.a = tk.DoubleVar(value=1.0)
-            ttk.Entry(self.param_frame, textvariable=self.a, width=5, font=('', 9)).grid(row=1, column=1, padx=5)
-
-            ttk.Label(self.param_frame, text="b:", font=('', 9)).grid(row=1, column=2, padx=5, pady=5)
-            self.b = tk.DoubleVar(value=1.0)
-            ttk.Entry(self.param_frame, textvariable=self.b, width=5, font=('', 9)).grid(row=1, column=3, padx=5)
-
-            ttk.Label(self.param_frame, text="c:", font=('', 9)).grid(row=1, column=4, padx=5, pady=5)
-            self.c = tk.DoubleVar(value=0.0)
-            ttk.Entry(self.param_frame, textvariable=self.c, width=5, font=('', 9)).grid(row=1, column=5, padx=5)
-
-        elif func_type == "指数函数":
-            ttk.Label(self.param_frame, text="y = a·e^(b·x) + c", font=('', 10)).grid(
-                row=0, column=0, columnspan=3, pady=5)
-
-            ttk.Label(self.param_frame, text="a:", font=('', 9)).grid(row=1, column=0, padx=5, pady=5)
-            self.a = tk.DoubleVar(value=1.0)
-            ttk.Entry(self.param_frame, textvariable=self.a, width=5, font=('', 9)).grid(row=1, column=1, padx=5)
-
-            ttk.Label(self.param_frame, text="b:", font=('', 9)).grid(row=1, column=2, padx=5, pady=5)
-            self.b = tk.DoubleVar(value=1.0)
-            ttk.Entry(self.param_frame, textvariable=self.b, width=5, font=('', 9)).grid(row=1, column=3, padx=5)
-
-            ttk.Label(self.param_frame, text="c:", font=('', 9)).grid(row=1, column=4, padx=5, pady=5)
-            self.c = tk.DoubleVar(value=0.0)
-            ttk.Entry(self.param_frame, textvariable=self.c, width=5, font=('', 9)).grid(row=1, column=5, padx=5)
-
-        elif func_type == "对数函数":
-            ttk.Label(self.param_frame, text="y = a·log(b·x + c)", font=('', 10)).grid(
-                row=0, column=0, columnspan=3, pady=5)
-
-            ttk.Label(self.param_frame, text="a:", font=('', 9)).grid(row=1, column=0, padx=5, pady=5)
-            self.a = tk.DoubleVar(value=1.0)
-            ttk.Entry(self.param_frame, textvariable=self.a, width=5, font=('', 9)).grid(row=1, column=1, padx=5)
-
-            ttk.Label(self.param_frame, text="b:", font=('', 9)).grid(row=1, column=2, padx=5, pady=5)
-            self.b = tk.DoubleVar(value=1.0)
-            ttk.Entry(self.param_frame, textvariable=self.b, width=5, font=('', 9)).grid(row=1, column=3, padx=5)
-
-            ttk.Label(self.param_frame, text="c:", font=('', 9)).grid(row=1, column=4, padx=5, pady=5)
-            self.c = tk.DoubleVar(value=0.0)
-            ttk.Entry(self.param_frame, textvariable=self.c, width=5, font=('', 9)).grid(row=1, column=5, padx=5)
-
-    def get_current_function(self) -> Tuple[str, Tuple[float, float, float]]:
-        """
-        获取当前函数类型和参数
-
-        Returns:
-            (函数类型, (a, b, c))
-        """
-        func_type = self.function_type.get()
-        a = self.a.get()
-        b = self.b.get()
-        c = self.c.get()
-
-        # 验证参数有效性
-        is_valid, error_msg = MathUtils.validate_function_parameters(func_type, a, b, c)
-        if not is_valid:
-            raise ValueError(error_msg)
-
-        return func_type, (a, b, c)
-
-    def get_plot_ranges(self) -> Dict[str, Tuple[float, float]]:
-        """
-        获取绘图范围
-
-        Returns:
-            包含x和y范围的字典
-        """
-        x_min = self.x_min.get()
-        x_max = self.x_max.get()
-        y_min = self.y_min.get()
-        y_max = self.y_max.get()
-
-        # 验证范围有效性
-        is_valid, error_msg = MathUtils.is_valid_range(x_min, x_max, y_min, y_max)
-        if not is_valid:
-            raise ValueError(error_msg)
-
-        return {
-            'x_range': (x_min, x_max),
-            'y_range': (y_min, y_max)
+        
+        # 显示函数公式
+        formula_text = self.get_formula_text(func_type)
+        formula_label = tk.Label(
+            self.param_frame,
+            text=formula_text,
+            font=('Segoe UI', 10, 'bold'),
+            fg=self.theme['primary'],
+            bg=self.theme['surface']
+        )
+        formula_label.pack(anchor=tk.W, pady=(0, 10))
+        
+        # 参数输入
+        self.a = tk.DoubleVar(value=1.0)
+        self.b = tk.DoubleVar(value=1.0 if func_type in ["正弦函数", "余弦函数", "指数函数", "对数函数"] else 0.0)
+        self.c = tk.DoubleVar(value=0.0)
+        
+        params = [("a", self.a), ("b", self.b), ("c", self.c)]
+        
+        for param, var in params:
+            param_frame = tk.Frame(self.param_frame, bg=self.theme['surface'])
+            param_frame.pack(fill=tk.X, pady=2)
+            
+            tk.Label(
+                param_frame,
+                text=f"{param}:",
+                font=('Segoe UI', 9),
+                fg=self.theme['on_surface'],
+                bg=self.theme['surface'],
+                width=3
+            ).pack(side=tk.LEFT)
+            
+            entry = tk.Entry(
+                param_frame,
+                textvariable=var,
+                font=('Segoe UI', 9),
+                width=15
+            )
+            entry.pack(side=tk.LEFT, padx=(5, 0))
+    
+    def get_formula_text(self, func_type):
+        """获取函数公式文本"""
+        formulas = {
+            "二次函数": "📐 y = a·x² + b·x + c",
+            "正弦函数": "〰️ y = a·sin(b·x + c)",
+            "余弦函数": "〰️ y = a·cos(b·x + c)",
+            "正切函数": "📈 y = a·tan(b·x + c)",
+            "指数函数": "📊 y = a·e^(b·x) + c",
+            "对数函数": "📉 y = a·log(b·x + c)"
         }
+        return formulas.get(func_type, "")
+    
+    def plot_function(self):
+        """绘制函数"""
+        try:
+            func_type = self.function_type.get()
+            params = (self.a.get(), self.b.get(), self.c.get())
+            
+            # 验证参数
+            is_valid, error_msg = MathUtils.validate_function_parameters(func_type, *params)
+            if not is_valid:
+                messagebox.showerror("参数错误", error_msg)
+                return
+            
+            # 清除之前的函数
+            self.math_calculator.clear_functions()
+            
+            # 添加当前函数
+            self.math_calculator.add_function(func_type, params, 'b')
+            
+            # 绘制函数
+            ranges = {'x_range': (-5, 5), 'y_range': (-5, 5)}
+            options = {'show_extrema': True, 'show_roots': True, 'show_intersection': False, 'show_grid_points': False}
+            
+            self.plot_area.plot_functions(self.math_calculator.functions, ranges, options)
+            
+        except Exception as e:
+            messagebox.showerror("绘制错误", f"绘制函数时发生错误: {str(e)}")
+    
+    def add_function(self):
+        """添加函数"""
+        try:
+            func_type = self.function_type.get()
+            params = (self.a.get(), self.b.get(), self.c.get())
+            
+            # 验证参数
+            is_valid, error_msg = MathUtils.validate_function_parameters(func_type, *params)
+            if not is_valid:
+                messagebox.showerror("参数错误", error_msg)
+                return
+            
+            # 选择颜色
+            from config.settings import FUNCTION_COLORS
+            color = FUNCTION_COLORS[self.math_calculator.get_function_count() % len(FUNCTION_COLORS)]
+            
+            # 添加函数
+            self.math_calculator.add_function(func_type, params, color)
+            
+            # 重新绘制
+            ranges = {'x_range': (-5, 5), 'y_range': (-5, 5)}
+            options = {'show_extrema': True, 'show_roots': True, 'show_intersection': True, 'show_grid_points': False}
+            
+            self.plot_area.plot_functions(self.math_calculator.functions, ranges, options)
+            
+        except Exception as e:
+            messagebox.showerror("添加错误", f"添加函数时发生错误: {str(e)}")
+    
+    def clear_plot(self):
+        """清除图形"""
+        self.math_calculator.clear_functions()
+        self.plot_area.clear_plot()
+    
+    def save_plot(self):
+        """保存图像"""
+        success, message = self.plot_area.save_plot()
+        if success:
+            messagebox.showinfo("保存成功", message)
+        else:
+            messagebox.showerror("保存错误", message)
 
-    def get_display_options(self) -> Dict[str, bool]:
-        """
-        获取显示选项
+    def show_font_settings(self):
+        """显示字体设置窗口"""
+        try:
+            FontSettingsWindow(
+                self.parent,
+                self.font_manager,
+                self.on_font_changed
+            )
+        except Exception as e:
+            messagebox.showerror("字体设置错误", f"打开字体设置窗口失败: {str(e)}")
 
-        Returns:
-            显示选项字典
-        """
-        return {
-            'show_extrema': self.show_extrema.get(),
-            'show_roots': self.show_roots.get(),
-            'show_intersection': self.show_intersection.get(),
-            'show_grid_points': self.show_grid_points.get()
-        }
+    def on_font_changed(self):
+        """字体更改后的回调"""
+        try:
+            # 更新字体信息显示
+            self.update_font_info()
+            # 调用主窗口的字体更改回调
+            self.font_changed_callback()
+        except Exception as e:
+            print(f"字体更改回调错误: {e}")
 
     def set_default_function(self):
         """设置默认函数并绘制"""
         self.function_type.set("二次函数")
-        self.update_function_options()
-        self.plot_callback()
-
-    def update_function_info(self, expression: str, func_type: str, params: Tuple[float, float, float]):
-        """
-        更新函数信息显示
-
-        Args:
-            expression: 函数表达式
-            func_type: 函数类型
-            params: 函数参数
-        """
-        self.function_label.config(text=expression)
-
-        # 计算并显示关键点信息
-        key_points = MathUtils.calculate_function_features(func_type, *params)
-
-        if self.math_calculator.get_function_count() >= 2:
-            key_points.append(f"共有 {self.math_calculator.get_function_count()} 个函数")
-
-        self.key_points.config(text="\n".join(key_points))
-
-    def clear_function_info(self):
-        """清除函数信息显示"""
-        self.function_label.config(text="")
-        self.key_points.config(text="")
+        self.update_parameters()
+        self.plot_function()

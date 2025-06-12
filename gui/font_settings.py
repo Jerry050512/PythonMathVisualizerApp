@@ -32,7 +32,7 @@ class FontSettingsWindow:
         # 创建字体设置窗口
         self.font_window = tk.Toplevel(self.parent)
         self.font_window.title("字体设置")
-        self.font_window.geometry("500x400")
+        self.font_window.geometry("500x500")
         self.font_window.resizable(False, False)
         
         # 设置窗口为模态窗口
@@ -115,8 +115,7 @@ class FontSettingsWindow:
         ttk.Button(
             button_frame, 
             text="应用字体", 
-            command=self.apply_font, 
-            style="Accent.TButton"
+            command=self.apply_font
         ).pack(side=tk.LEFT, padx=5)
         
         ttk.Button(

@@ -25,6 +25,16 @@ Math Visualizer is a dynamic and user-friendly Python application 🐍 that allo
 
 ## 🚀 How to Use
 
+### Setup Environment
+
+Use `venv` to create a virtual environment. (Recommend)
+Use `pip` to install the requirements. 
+```
+pip install -r requirements.txt
+```
+
+### Run the App
+
 1.  **Run the application:** Execute `python main.py` to start the Math Visualizer.
 2.  **Select function type:** Choose a function from the dropdown menu (e.g., "二次函数" for Quadratic, "正弦函数" for Sine).
 3.  **Enter parameters:** Input the coefficients (a, b, c) that define your chosen function.

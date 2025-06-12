@@ -115,8 +115,7 @@ class FontSettingsWindow:
         ttk.Button(
             button_frame, 
             text="应用字体", 
-            command=self.apply_font, 
-            style="Accent.TButton"
+            command=self.apply_font
         ).pack(side=tk.LEFT, padx=5)
         
         ttk.Button(

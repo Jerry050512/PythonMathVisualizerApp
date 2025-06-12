@@ -50,6 +50,10 @@ pip install -r requirements.txt
 9.  **Save Plot:** Click "保存图像" (Save Plot) to save your masterpiece!
 10. **Font Settings:** Click "字体设置" (Font Settings) to customize fonts, especially for non-English characters.
 
+### Windows Display Scaling
+
+To ensure text and UI elements appear sharp on high-DPI displays on Windows, this application attempts to set itself as DPI-aware. This is done by calling Windows API functions using the `ctypes` library at startup. If you encounter any issues with display scaling, this is the mechanism responsible for it. On other operating systems like macOS and Linux, DPI scaling is generally handled more automatically by the system or toolkit.
+
 ## ⚙️ How It Works
 
 The application leverages the power of Python with **Tkinter** for its graphical user interface (GUI) and **Matplotlib** for sophisticated plotting capabilities.

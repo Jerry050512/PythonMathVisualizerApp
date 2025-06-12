@@ -70,7 +70,7 @@ pip install -r requirements.txt
 
 ## 📂 代码文件功能
 
-*   **`main.py`**: 🏁 应用程序的主要入口点。初始化 Tkinter 根窗口并启动 `MathVisualizerApp`。
+*   **`main.py`**: 🏁 应用程序的主要入口点。它会创建 `gui.main_window` 模块中 `MathVisualizerApp` 的一个实例，并调用其 `run()` 方法来启动应用程序。
 
 *   **`config/__init__.py`**: 将 `config` 目录标记为 Python 包。
 *   **`config/settings.py`**: ⚙️ 存储应用程序的所有静态配置数据。包括：
@@ -93,8 +93,8 @@ pip install -r requirements.txt
         *   `find_roots()`, `find_extrema()`, `find_intersections()`: 实现数值或解析方法来定位函数曲线上的这些重要点。
 
 *   **`gui/__init__.py`**: 将 `gui` 目录标记为 Python 包。
-*   **`gui/main_window.py`**: 🖼️ 定义 `MathVisualizerApp`，即主要的应用程序类，负责协调 GUI。
-    *   `MathVisualizerApp`: 初始化主 Tkinter 窗口，设置样式，并创建 `ControlPanel` 和 `PlotArea` 的实例。它将控制面板的回调（例如，“绘图按钮点击”）连接到更新绘图区域或计算器的操作。
+*   **`gui/main_window.py`**: 🖼️ 定义 `MathVisualizerApp`，这是封装整个 GUI 的主要应用程序类。
+    *   `MathVisualizerApp`: 初始化自己的 Tkinter 根窗口 (`tk.Tk()`)，设置样式，并创建 `ControlPanel` 和 `PlotArea` 的实例。它通过其 `run()` 方法管理应用程序的主事件循环。它还将控制面板的回调连接到更新绘图区域或计算器的操作。
 *   **`gui/control_panel.py`**: 🎛️ 定义 `ControlPanel`，用于用户输入和操作。
     *   `ControlPanel`: 创建所有 UI 元素（用于函数类型的下拉列表，用于参数 a,b,c 和绘图范围的输入字段，用于显示选项的复选框，操作按钮）。它收集用户输入并调用 `MathVisualizerApp` 中相应的回调函数。
 *   **`gui/plot_area.py`**: 📊 定义 `PlotArea`，用于显示 Matplotlib 绘图。

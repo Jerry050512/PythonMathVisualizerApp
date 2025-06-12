@@ -19,24 +19,6 @@ except ImportError as e:
 
 def main():
     """主函数"""
-<<<<<<< HEAD
-    # 创建根窗口
-    root = tk.Tk()
-    
-    # 创建应用程序实例
-    app = MathVisualizerApp(root)
-    
-    # 设置应用程序样式
-    root.tk_setPalette(
-        background='#f0f0f0', 
-        foreground='#333333', 
-        activeBackground='#4a90d9', 
-        activeForeground='white'
-    )
-    
-    # 启动主循环
-    root.mainloop()
-=======
     try:
         app = MathVisualizerApp()
         app.run()
@@ -44,7 +26,6 @@ def main():
         print(f"❌ 启动失败: {e}")
         import traceback
         traceback.print_exc()
->>>>>>> b8fa0e1d66aa93543928312044add878d77cfd6c
 
 
 if __name__ == "__main__":

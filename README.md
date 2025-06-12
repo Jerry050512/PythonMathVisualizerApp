@@ -72,7 +72,7 @@ The application leverages the power of Python with **Tkinter** for its graphical
 
 ## 📂 Code File Functions
 
-*   **`main.py`**: 🏁 The main entry point of the application. Initializes the Tkinter root window and launches the `MathVisualizerApp`.
+*   **`main.py`**: 🏁 The main entry point of the application. It creates an instance of `MathVisualizerApp` from the `gui.main_window` module and calls its `run()` method to start the application.
 
 *   **`config/__init__.py`**: Marks the `config` directory as a Python package.
 *   **`config/settings.py`**: ⚙️ Stores all static configuration data for the application. This includes:
@@ -95,8 +95,8 @@ The application leverages the power of Python with **Tkinter** for its graphical
         *   `find_roots()`, `find_extrema()`, `find_intersections()`: Implements numerical or analytical methods to locate these important points on the function curves.
 
 *   **`gui/__init__.py`**: Marks the `gui` directory as a Python package.
-*   **`gui/main_window.py`**: 🖼️ Defines `MathVisualizerApp`, the main application class orchestrating the GUI.
-    *   `MathVisualizerApp`: Initializes the main Tkinter window, sets up styles, and creates instances of `ControlPanel` and `PlotArea`. It connects callbacks from the control panel (e.g., "plot button clicked") to actions that update the plot area or calculator.
+*   **`gui/main_window.py`**: 🖼️ Defines `MathVisualizerApp`, the main application class that encapsulates the entire GUI.
+    *   `MathVisualizerApp`: Initializes its own Tkinter root window (`tk.Tk()`), sets up styles, and creates instances of `ControlPanel` and `PlotArea`. It manages the application's main event loop through its `run()` method. It also connects callbacks from the control panel to actions that update the plot area or calculator.
 *   **`gui/control_panel.py`**: 🎛️ Defines `ControlPanel` for user inputs and actions.
     *   `ControlPanel`: Creates all UI elements (dropdowns for function type, entry fields for parameters a,b,c and plot ranges, checkboxes for display options, action buttons). It gathers user input and calls the appropriate callback functions in `MathVisualizerApp`.
 *   **`gui/plot_area.py`**: 📊 Defines `PlotArea` for displaying Matplotlib plots.

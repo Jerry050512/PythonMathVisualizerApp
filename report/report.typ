@@ -59,7 +59,7 @@
       [*框架*], [*优点*], [*缺点*], [*适用场景*]
     ),
     [*Tkinter*], 
-    [• 轻量级，内置支持\ • 学习曲线平缓\ • 与Matplotlib集成好], 
+    [• 轻量级, 内置支持\ • 学习曲线平缓\ • 与Matplotlib集成好], 
     [• 界面相对简陋\ • 现代化程度较低\ • 自定义样式受限], 
     [教学项目\ 原型开发\ 工具类应用],
     
@@ -246,7 +246,7 @@ class MathFunctionCalculator:
             y: y坐标数组
             
         Returns:
-            极值点列表，每个元素为 (x, y, type)
+            极值点列表, 每个元素为 (x, y, type)
         """
         extrema = []
         dy = np.diff(y)
@@ -378,7 +378,7 @@ class FontManager:
 
 #figure(
   image("assets/main-ui.png"), 
-  caption: [图 3-1: 数学函数可视化工具主界面 - 左侧为功能控制面板，右侧为matplotlib绘图区域],
+  caption: [数学函数可视化工具主界面],
   supplement: [图]
 ) <main-ui>
 
@@ -391,7 +391,7 @@ class FontManager:
 @main-ui 左侧即为控制面板: 
 #figure(
   image("assets/control-panel.png", height: 40%), 
-  caption: [图 3-2: 控制面板界面 - 包含函数选择、参数输入、显示选项等控件],
+  caption: [控制面板界面],
   supplement: [图]
 )
 
@@ -405,7 +405,7 @@ class FontManager:
 @main-ui 右侧即为使用`FigureCanvasTkAgg`实现的`matplotlib`绘图区域: 
 #figure(
   image("assets/plot-area.png", height: 30%), 
-  caption: [图 3-3: matplotlib绘图区域 - 支持多函数叠加显示和关键点标注],
+  caption: [matplotlib绘图区域],
   supplement: [图]
 )
 
@@ -418,7 +418,7 @@ class FontManager:
 点击 `字体设置` 按钮即可触发此处的用户界面: 
 #figure(
   image("assets/font-settings.png", height: 30%), 
-  caption: [图 3-4: 字体设置界面 - 提供系统字体列表选择和实时预览功能],
+  caption: [字体设置界面],
   supplement: [图]
 )
 
@@ -465,15 +465,15 @@ class FontManager:
 
 === 数值计算精度问题
 
-*问题描述：*在进行零点和交点计算时，由于浮点数运算的精度限制，可能出现计算不准确或遗漏解的情况。
+*问题描述, *在进行零点和交点计算时, 由于浮点数运算的精度限制, 可能出现计算不准确或遗漏解的情况。
 
-*数学原理：*零点查找基于中间值定理，若连续函数$f(x)$在区间$[a,b]$上满足$f(a) · f(b) < 0$，则在该区间内至少存在一个零点。我们使用线性插值法进行精确逼近：
+*数学原理, *零点查找基于中间值定理, 若连续函数$f(x)$在区间$[a,b]$上满足$f(a) · f(b) < 0$, 则在该区间内至少存在一个零点。我们使用线性插值法进行精确逼近, 
 
 $ x_"root" = x_i - f(x_i) · (x_(i+1) - x_i)/(f(x_(i+1)) - f(x_i)) $
 
-其中，容差条件为：$|f(x_i)| < epsilon$，$epsilon = 0.1$
+其中, 容差条件为, $|f(x_i)| < epsilon$, $epsilon = 0.1$
 
-*解决方案：*
+*解决方案, *
 ```python
 def find_roots(self, x: np.ndarray, y: np.ndarray, tolerance: float = 0.1) -> List[float]:
     """使用改进的零点查找算法"""
@@ -491,34 +491,34 @@ def find_roots(self, x: np.ndarray, y: np.ndarray, tolerance: float = 0.1) -> Li
 
 === 函数定义域处理
 
-*问题描述：*对数函数和正切函数存在定义域限制，需要避免在无定义点绘制。
+*问题描述, *对数函数和正切函数存在定义域限制, 需要避免在无定义点绘制。
 
-*数学处理：*
-- 对数函数：$ln(x)$，定义域为$x > 0$
-- 正切函数：$tan(x)$，在$x = π/2 + n π$处无定义
+*数学处理, *
+- 对数函数, $ln(x)$, 定义域为$x > 0$
+- 正切函数, $tan(x)$, 在$x = π/2 + n π$处无定义
 
-*解决方案：*使用numpy的mask功能过滤无效值，确保绘图的连续性和正确性。
+*解决方案, *使用numpy的mask功能过滤无效值, 确保绘图的连续性和正确性。
 
 === 中文字体兼容性
 
-*问题描述：*不同操作系统的中文字体支持存在差异，需要实现跨平台的字体自动检测和切换。
+*问题描述, *不同操作系统的中文字体支持存在差异, 需要实现跨平台的字体自动检测和切换。
 
-*解决方案：*实现智能字体管理系统，预设各平台优选字体列表，并提供运行时动态检测和切换功能。
+*解决方案, *实现智能字体管理系统, 预设各平台优选字体列表, 并提供运行时动态检测和切换功能。
 
 === 界面响应性优化
 
-*问题描述：*复杂函数计算和绘制可能导致界面冻结。
+*问题描述, *复杂函数计算和绘制可能导致界面冻结。
 
-*解决方案：*
+*解决方案, *
 - 使用NumPy矢量化运算提升计算效率
-- 合理控制采样点密度，平衡精度与性能
-- 实现渐进式绘制，优先显示主要曲线
+- 合理控制采样点密度, 平衡精度与性能
+- 实现渐进式绘制, 优先显示主要曲线
 
 == 性能测试与优化
 
 === 计算性能分析
 
-通过性能测试，得出以下关键指标：
+通过性能测试, 得出以下关键指标, 
 
 #figure(
   table(
@@ -561,28 +561,28 @@ def find_roots(self, x: np.ndarray, y: np.ndarray, tolerance: float = 0.1) -> Li
 - *二次函数与零点/极值点* 
 #figure(
   image("assets/quadratic_example.png", width: 80%), 
-  caption: [图 4-1: 二次函数 $y = x^2 - 4$ 的可视化效果，展示零点和极值点的自动标注],
+  caption: [二次函数 $y = x^2 - 4$ 的可视化效果, 展示零点和极值点的自动标注],
   supplement: [图]
 )
 
 - *正弦函数与多函数叠加*
 #figure(
   image("assets/sine-overlay-example.png", width: 80%), 
-  caption: [图 4-2: 正弦函数与正切函数的交点分析 - 展示多函数叠加和交点计算功能],
+  caption: [正弦函数与正切函数的交点分析, 展示多函数叠加和交点计算功能],
   supplement: [图]
 )
 
 - *对数函数与自定义范围*
 #figure(
   image("assets/log-example.png", width: 80%), 
-  caption: [图 4-3: 自然对数函数 $y = ln x$ 的绘制效果，体现定义域处理的正确性],
+  caption: [自然对数函数 $y = ln x$ 的绘制效果, 体现定义域处理的正确性],
   supplement: [图]
 )
 
 - *中文显示效果*
 #figure(
   image("assets/chinese-font.png", width: 80%), 
-  caption: [图 4-4: 楷体字体显示效果 - 展示跨平台中文字体管理功能的实际效果],
+  caption: [楷体字体显示效果, 展示跨平台中文字体管理功能的实际效果],
   supplement: [图]
 )
 
@@ -632,7 +632,7 @@ def find_roots(self, x: np.ndarray, y: np.ndarray, tolerance: float = 0.1) -> Li
 
 == 源代码
 
-本项目源代码已上传至GitHub仓库，具体结构如下：
+本项目源代码已上传至GitHub仓库, 具体结构如下, 
 
 ```
 formula_plot/
@@ -665,11 +665,11 @@ formula_plot/
 
 === 系统要求
 - Python 3.8 或更高版本
-- 支持的操作系统：Windows 10/11, macOS 10.15+, Ubuntu 18.04+
+- 支持的操作系统, Windows 10/11, macOS 10.15+, Ubuntu 18.04+
 
 === 依赖安装
 ```bash
-# 创建虚拟环境（推荐）
+# 创建虚拟环境 (推荐) 
 python -m venv venv
 
 # 激活虚拟环境
@@ -685,21 +685,21 @@ pip install -r requirements.txt
 == 使用手册
 
 === 基本操作流程
-1. 启动程序：`python main.py`
-2. 选择函数类型（二次函数、三角函数、指数函数、对数函数）
-3. 输入函数参数（a, b, c）
+1. 启动程序, `python main.py`
+2. 选择函数类型 (二次函数、三角函数、指数函数、对数函数) 
+3. 输入函数参数 (a, b, c) 
 4. 设置坐标轴显示范围
-5. 选择显示选项（极值点、零点、交点、网格点）
+5. 选择显示选项 (极值点、零点、交点、网格点) 
 6. 点击"绘制函数"或"添加函数"
-7. 如需保存，点击"保存图像"
+7. 如需保存, 点击"保存图像"
 
 === 高级功能
-- *多函数叠加*：使用"添加函数"功能可在同一图表上显示多个函数
-- *字体自定义*：点击"字体设置"可选择系统中的中文字体
-- *精确分析*：启用关键点显示可自动标注零点、极值点和交点
+- *多函数叠加*, 使用"添加函数"功能可在同一图表上显示多个函数
+- *字体自定义*, 点击"字体设置"可选择系统中的中文字体
+- *精确分析*, 启用关键点显示可自动标注零点、极值点和交点
 
 == 获取源代码
 
-本项目完整源代码可通过以下方式获取：
-- GitHub仓库：https://github.com/Jerry050512/PythonMathVisualizerApp
-- 项目主页：包含在线演示和详细文档 
+本项目完整源代码可通过以下方式获取, 
+- GitHub仓库, https://github.com/Jerry050512/PythonMathVisualizerApp
+- 项目主页, 包含在线演示和详细文档 
